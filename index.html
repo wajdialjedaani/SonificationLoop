@@ -208,6 +208,23 @@
                 const tabLength = 4;
                 playBeep(leadingWhitespace / tabLength);
             });
+
+            editor.addAction({
+            id: "playBeep",
+            label: "Play Beep",
+            keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyK],
+            contextMenuGroupId: "navigation",
+            contextMenuOrder: 1,
+            run: () => {
+                const model = editor.getModel();
+                const lineText = model.getLineContent(editor.getPosition().lineNumber);
+                const leadingWhitespace =
+                    lineText.length - lineText.trimStart().length;
+                //Python considers 4 spaces equivalent to 1 indent level. Editor replaces tabs with 4 spaces by default.
+                const tabLength = 4;
+                playBeep(leadingWhitespace / tabLength);
+            },
+        })
         });
     </script>
 
