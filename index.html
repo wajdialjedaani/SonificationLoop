@@ -222,7 +222,7 @@
                     lineText.length - lineText.trimStart().length;
                 //Python considers 4 spaces equivalent to 1 indent level. Editor replaces tabs with 4 spaces by default.
                 const tabLength = 4;
-                playBeep(leadingWhitespace / tabLength);
+                playBeep(leadingWhitespace / tabLength, true);
             },
         })
         });
@@ -289,8 +289,8 @@
     }
 
     let beepsInProgress = []
-    const playBeep = (count) => {
-        if (isSound) {
+    const playBeep = (count, override = false) => {
+        if (isSound || override) {
             const audio = new Audio(beepSound);
             for(const sound of beepsInProgress) {
                 sound.pause()
