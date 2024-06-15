@@ -1,3 +1,4 @@
+<!-- BEEP HOTKEY: CTRL/CMD + K -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -36,159 +37,7 @@
                 }
                 return count;
             }
-            monaco.languages.registerHoverProvider("mySpecialLanguage", {
-                provideHover: function (model, position) {
-                    const code = model.getValue() //getting all the values 
-                    const line = model.getLinesContent()
-                    const wordInfo = model.getWordAtPosition(position)
-                    // Pause the audio
-
-                    var countIndent = [
-                        {
-                            'count': 0,
-                            'i': 0,
-                        }
-                    ];
-
-
-                    const str = code.trim();
-                    let count = 0;
-                    const forArray = [];
-                    const previousSpace = [countLeadingWhitespace(str)];
-                    const newStr = line.map((text, index) => {
-                        let s = '';
-                        const lineNumber = index + 1; // Line numbers start from 1
-                        const lastIndent = previousSpace[previousSpace.length - 1];
-                        const currentIndent = countLeadingWhitespace(text);
-
-                        var flag = false
-
-                        // Construct the line with line number and indentation count
-                        let lineContent = `${text}`;
-
-                        if (lastIndent === currentIndent && text.includes('for')) {
-                            count++
-                            s = lineContent + '$$' + count + '$$';
-                            forArray.push(count)
-                            countIndent.push({
-                                'count': 1,
-                                'i': currentIndent
-                            })
-                            flag = true
-
-                        } else if (lastIndent > currentIndent && text.includes('for')) {
-                            count--;
-                            previousSpace.push(currentIndent);
-                            s = lineContent + '$$' + count + '$$';
-                            forArray.push(count)
-                            countIndent.push({
-                                'count': count,
-                                'i': currentIndent
-                            })
-                            flag = true
-
-                        } else if (lastIndent < countLeadingWhitespace(text) && text.includes('for')) {
-                            count++;
-                            previousSpace.push(currentIndent);
-                            s = lineContent + '$$' + count + '$$';
-                            forArray.push(count)
-                            countIndent.push({
-                                'count': count,
-                                'i': currentIndent
-                            })
-                            flag = true
-
-                        } else {
-                            let uCount = countIndent.find((f) => f.i == currentIndent)
-
-                            // console.log(count)
-                            if (uCount?.count == 0 || uCount?.count) {
-                                console.log(uCount)
-                                // console.log('last indent------', lastIndent)
-                                // console.log('curr indent------', currentIndent)
-                                if (uCount.count == 0) {
-                                    if (lastIndent === currentIndent && text.includes('for')) {
-                                        count = 1
-                                        s = lineContent + '$$' + count + '$$';
-                                        forArray.push(count)
-                                        countIndent.push({
-                                            'count': 1,
-                                            'i': currentIndent
-                                        })
-
-                                    }
-
-                                }
-                                s = lineContent + '$$' + (uCount.count - 1) + '$$';
-
-
-                            }
-
-                            else {
-
-                                console.log(countIndent)
-                                s = lineContent + '$$' + count + '$$';
-                            }
-                        }
-                        console.log(count)
-                        s = s + '\n';
-                        return s;
-                    });
-
-                    // console.log(countIndent)
-                    str2 = newStr.join('')
-                    console.log(str2)
-                    str2 = str2 + '\n'
-                    const updatedLine = str2.split('\n')[position.lineNumber - 1]
-                    // console.log(updatedLine)
-                    const matches = updatedLine.match(/\$\$(\d+)\$\$/)
-                    if (matches) {
-                        // console.log(matches)
-
-                        const number = matches[1];
-                        // console.log(number); // Output: 3
-                        playBeep(number)
-                        // alert(number)
-                    }
-                    else {
-                        playBeep(0)
-                    }
-                    // newStr.map((value) => {
-                    //     console.log(value)
-                    //     const matches = value.match(/\$\$(\d+)\$\$/)
-                    //     if (matches) {
-                    //         console.log(matches)
-                    //         const number = matches[1];
-                    //         // console.log(number); // Output: 3
-                    //         playBeep(number)
-                    //         // alert(number)
-                    //     }
-                    //     else {
-                    //         playBeep(0)
-                    //     }
-
-                    // })
-
-
-                    // if (str2.includes('for')) {
-                    //     const updatedLine = str2.split('\n')[position.lineNumber - 1]
-                    //     const matches = updatedLine.match(/\$\$(\d+)\$\$/)
-                    //     if (matches) {
-                    //         const number = matches[1];
-                    //         // console.log(number); // Output: 3
-                    //         playBeep(number)
-                    //         // alert(number)
-                    //     }
-                    //     else {
-                    //         playBeep(0)
-                    //     }
-                    // }
-
-
-                    return null
-                },
-            });
-
+            
             const editor = monaco.editor.create(document.getElementById("container"), {
                 value: "print('hlo')",
                 language: "mySpecialLanguage",
@@ -241,6 +90,7 @@
                     <ul>
                         <li>Press <strong>Shift + Enter</strong> to Run Code</li>
                         <li>Press <strong>Alt + s/S</strong> to toggle Sound On/Off</li>
+                        <li>Press <strong>Ctrl + k/K</strong> to play beep</li>
                     </ul>
                     <div class="d-flex justify-content-between mt-4">
                         <button class="btn btn-primary" onclick="runCode()">Run Code</button>
