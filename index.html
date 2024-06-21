@@ -1,8 +1,13 @@
-<!-- BEEP HOTKEY: CTRL/CMD + K -->
+<!-- BEEP HOTKEY: CTRL/CMD + K
+    Edit on line 8 by modifying the values within the array
+    E.G. to make the hotkey Ctrl+E: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyE] -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+    <script>
+        const BEEP_HOTKEY = ()=>[monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyK]
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Python Custom Editor </title>
@@ -61,7 +66,7 @@
             editor.addAction({
             id: "playBeep",
             label: "Play Beep",
-            keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyK],
+            keybindings: BEEP_HOTKEY(),
             contextMenuGroupId: "navigation",
             contextMenuOrder: 1,
             run: () => {
